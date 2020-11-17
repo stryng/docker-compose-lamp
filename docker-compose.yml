@@ -1,6 +1,11 @@
 version: "3"
 
 services:
+  haproxy:
+    build: ./bin/haproxy/.
+    ports:
+     - '80:8080'
+     - '8404:8404'    
   webserver:
     build: 
       context: ./bin/${PHPVERSION}
