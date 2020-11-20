@@ -1,15 +1,11 @@
-version: "3"
+version: "3.8"
 
-services:
-  haproxy:
-    build: ./bin/haproxy/.
-    ports:
-     - '80:8081'
-     - '8404:8404'    
+services: 
   webserver:
+    deploy:
+      replicas: 5
     build: 
       context: ./bin/${PHPVERSION}
-    container_name: '${COMPOSE_PROJECT_NAME}-${PHPVERSION}'
     restart: 'always'
     links: 
       - database
@@ -52,3 +48,15 @@ services:
   redis:
     container_name: '${COMPOSE_PROJECT_NAME}-redis'
     image: redis:latest
+  haproxy:
+    build: ./bin/haproxy/.
+    container_name: '${COMPOSE_PROJECT_NAME}-haproxy'
+    restart: 'always'
+    ports:
+      - '80:8080'
+      - '8404:8404'
+    links:
+      - database
+      - phpmyadmin
+      - redis
+      - webserver
